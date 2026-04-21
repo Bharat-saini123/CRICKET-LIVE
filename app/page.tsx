@@ -67,7 +67,7 @@ export default function Home() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
               <span style={{ fontSize: 28 }}>🏏</span>
               <h1 style={{ margin: 0, fontSize: 26, fontWeight: 900, color: "#f1f5f9", letterSpacing: 0.5 }}>
-                IPL 2026 · <span style={{ color: "#22c55e" }}>Live Scores</span>
+                Cricket · <span style={{ color: "#22c55e" }}>Live Scores</span>
               </h1>
             </div>
             <p style={{ margin: 0, fontSize: 13, color: "#6b7280" }}>
@@ -131,7 +131,7 @@ export default function Home() {
             ))}
           </div>
         ) : tab === "standings" ? (
-          <StandingsTable />
+          <StandingsTable seriesId={matches.find(m => m.series_id)?.series_id || ""} />
         ) : tabMatches.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 20px", color: "#374151" }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>🏏</div>

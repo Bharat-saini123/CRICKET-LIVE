@@ -1,19 +1,29 @@
 "use client";
-import { Match, TEAM } from "@/types/cricket";
+import { Match } from "@/types/cricket";
 
-function TeamBadge({ name, size = 44 }: { name: string; size?: number }) {
-  const t = TEAM[name];
-  const color = t?.color || "#374151";
-  const short = t?.short || name.slice(0, 3).toUpperCase();
+function TeamBadge({ url, short, size = 44 }: { url?: string; short: string; size?: number }) {
+  if (url) {
+    return (
+      <div style={{
+        width: size, height: size, borderRadius: 10, flexShrink: 0,
+        background: "#ffffff", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)", border: "1.5px solid rgba(255,255,255,0.1)"
+      }}>
+        <img src={url} alt={short} style={{ width: "80%", height: "80%", objectFit: "contain" }} />
+      </div>
+    );
+  }
+
+  const shortName = short.slice(0, 3).toUpperCase();
   return (
     <div style={{
       width: size, height: size, borderRadius: 10, flexShrink: 0,
-      background: `linear-gradient(145deg, ${color}cc, ${color}66)`,
-      border: `1.5px solid ${color}55`,
+      background: `linear-gradient(145deg, #374151cc, #37415166)`,
+      border: `1.5px solid #37415155`,
       display: "flex", alignItems: "center", justifyContent: "center",
       fontWeight: 800, color: "#fff", fontSize: size * 0.27, letterSpacing: 0.5,
-      boxShadow: `0 4px 12px ${color}33`,
-    }}>{short.slice(0, 3)}</div>
+      boxShadow: `0 4px 12px #37415133`,
+    }}>{shortName}</div>
   );
 }
 
@@ -21,8 +31,12 @@ interface Props { match: Match; onClick: () => void; }
 
 export default function MatchCard({ match, onClick }: Props) {
   const [t1, t2] = match.teams;
-  const s1 = match.score?.find(s => s.inning.includes(t1));
-  const s2 = match.score?.find(s => s.inning.includes(t2));
+  const s1 = match.score?.find(s => s.inning.toLowerCase().includes(t1.toLowerCase()));
+  const s2 = match.score?.find(s => s.inning.toLowerCase().includes(t2.toLowerCase()));
+  
+  const t1Info = match.teamInfo?.find(t => t.name === t1);
+  const t2Info = match.teamInfo?.find(t => t.name === t2);
+
   const isLive = match.matchStarted && !match.matchEnded;
   const isDone = match.matchEnded;
 
@@ -54,7 +68,9 @@ export default function MatchCard({ match, onClick }: Props) {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ fontSize: 12 }}>🏆</span>
-          <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600 }}>T20 · IPL 2026</span>
+          <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {(match.matchType || "Match").toUpperCase()} · {match.name.split(",")[1] || match.name}
+          </span>
         </div>
         {isLive ? (
           <span style={{ display: "flex", alignItems: "center", gap: 4,
@@ -79,12 +95,11 @@ export default function MatchCard({ match, onClick }: Props) {
         {/* Team 1 */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <TeamBadge name={t1} />
+            <TeamBadge url={t1Info?.img} short={t1Info?.shortname || t1} />
             <div>
-              <div style={{ fontWeight: 700, fontSize: 14, color: "#f1f5f9" }}>
-                {TEAM[t1]?.short || t1}
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#f1f5f9", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {t1Info?.shortname || t1}
               </div>
-              <div style={{ fontSize: 11, color: "#4b5563", marginTop: 1 }}>{TEAM[t1]?.city || t1}</div>
             </div>
           </div>
           {s1 ? (
@@ -109,12 +124,11 @@ export default function MatchCard({ match, onClick }: Props) {
         {/* Team 2 */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <TeamBadge name={t2} />
+            <TeamBadge url={t2Info?.img} short={t2Info?.shortname || t2} />
             <div>
-              <div style={{ fontWeight: 700, fontSize: 14, color: "#f1f5f9" }}>
-                {TEAM[t2]?.short || t2}
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#f1f5f9", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {t2Info?.shortname || t2}
               </div>
-              <div style={{ fontSize: 11, color: "#4b5563", marginTop: 1 }}>{TEAM[t2]?.city || t2}</div>
             </div>
           </div>
           {s2 ? (
@@ -141,10 +155,11 @@ export default function MatchCard({ match, onClick }: Props) {
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {isDone
             ? match.status
-            : `📍 ${match.venue?.split(",")[0]}`}
+            : `📍 ${match.venue?.split(",")[0] || match.venue}`}
         </div>
         <span style={{ fontSize: 13, color: "#374151" }}>›</span>
       </div>
     </div>
   );
 }
+

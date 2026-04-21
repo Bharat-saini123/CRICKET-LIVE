@@ -21,11 +21,6 @@ export default function Header({ liveCount, onRefresh, lastUpdated }: Props) {
           <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: 1, color: "#fff" }}>
             Cricket<span style={{ color: "#22c55e" }}>Live</span>
           </span>
-          <span style={{
-            fontSize: 11, fontWeight: 700, color: "#fbbf24",
-            background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)",
-            borderRadius: 6, padding: "2px 7px",
-          }}>IPL 2026</span>
         </div>
 
         {/* Right side */}
