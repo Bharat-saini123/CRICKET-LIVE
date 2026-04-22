@@ -81,7 +81,12 @@ export default function StandingsTable({ seriesId }: Props) {
           </div>
 
           {/* Rows */}
-          {standings.map((row, i) => {
+          {[...standings].sort((a, b) => {
+            const ptsA = a.points ?? (a.wins * 2);
+            const ptsB = b.points ?? (b.wins * 2);
+            if (ptsB !== ptsA) return ptsB - ptsA;
+            return (b.nrr ?? 0) - (a.nrr ?? 0);
+          }).map((row, i) => {
             const qualified = i < 4;
             const pts = row.points ?? (row.wins * 2);
             return (
