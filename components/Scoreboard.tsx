@@ -79,18 +79,18 @@ export default function Scoreboard({ match, onClose }: Props) {
       .finally(() => setLoading(false));
   }, [match.id]);
 
-  const t1 = match.teams[0];
-  const t2 = match.teams[1];
-  const s1 = match.score?.find(s => s.inning.toLowerCase().includes(t1.toLowerCase()));
-  const s2 = match.score?.find(s => s.inning.toLowerCase().includes(t2.toLowerCase()));
+  const t1 = match.teams?.[0] || "Team 1";
+  const t2 = match.teams?.[1] || "Team 2";
+  const s1 = match.score?.find(s => s.inning?.toLowerCase().includes(t1.toLowerCase()));
+  const s2 = match.score?.find(s => s.inning?.toLowerCase().includes(t2.toLowerCase()));
   const t1info = match.teamInfo?.find(t => t.name === t1);
   const t2info = match.teamInfo?.find(t => t.name === t2);
 
   const squad1: any[] = detail?.squads?.find((s: any) => s.teamName === t1)?.player || [];
   const squad2: any[] = detail?.squads?.find((s: any) => s.teamName === t2)?.player || [];
 
-  const sc1 = detail?.scorecard?.find(sc => sc.inning.toLowerCase().includes(t1.toLowerCase()));
-  const sc2 = detail?.scorecard?.find(sc => sc.inning.toLowerCase().includes(t2.toLowerCase()));
+  const sc1 = detail?.scorecard?.find(sc => sc.inning?.toLowerCase().includes(t1.toLowerCase()));
+  const sc2 = detail?.scorecard?.find(sc => sc.inning?.toLowerCase().includes(t2.toLowerCase()));
 
   // Fallback default colors if no image provided
   const def1 = "#374151";
@@ -272,7 +272,7 @@ export default function Scoreboard({ match, onClose }: Props) {
                       padding: "7px 0", borderBottom: i < match.score!.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none",
                     }}>
                       <span style={{ fontSize: 12, color: "#9ca3af" }}>
-                        {s.inning.replace(" Inning 1", " (1st)").replace(" Inning 2", " (2nd)")}
+                        {s.inning?.replace(" Inning 1", " (1st)").replace(" Inning 2", " (2nd)") || "Inning"}
                       </span>
                       <span style={{ fontSize: 14, fontWeight: 800, color: "#f1f5f9" }}>
                         {s.r}/{s.w} <span style={{ fontSize: 11, color: "#4b5563", fontWeight: 500 }}>({s.o} ov)</span>
@@ -289,12 +289,12 @@ export default function Scoreboard({ match, onClose }: Props) {
               {sc1 ? (
                 <div>
                   <div style={{ background: "rgba(0,0,0,0.3)", padding: "10px 16px", fontSize: 12, fontWeight: 700, color: "#9ca3af" }}>BATTING</div>
-                  {sc1.batting.map((b, i) => (
-                    <PlayerRow key={i} name={b.batsman.name} role={b["dismissal-text"] || "not out"} bat={b.r} sr={b.sr} color={def1} />
+                  {sc1.batting?.map((b, i) => (
+                    <PlayerRow key={i} name={b.batsman?.name || "Unknown"} role={b["dismissal-text"] || "not out"} bat={b.r} sr={b.sr} color={def1} />
                   ))}
                   <div style={{ background: "rgba(0,0,0,0.3)", padding: "10px 16px", fontSize: 12, fontWeight: 700, color: "#9ca3af" }}>BOWLING</div>
-                  {sc1.bowling.map((b, i) => (
-                    <PlayerRow key={i} name={b.bowler.name} role={`Eco: ${b.eco}`} bat={b.r} wkt={b.w} color={def1} />
+                  {sc1.bowling?.map((b, i) => (
+                    <PlayerRow key={i} name={b.bowler?.name || "Unknown"} role={`Eco: ${b.eco}`} bat={b.r} wkt={b.w} color={def1} />
                   ))}
                 </div>
               ) : squad1.length > 0 ? squad1.map((p, i) => (
@@ -312,12 +312,12 @@ export default function Scoreboard({ match, onClose }: Props) {
               {sc2 ? (
                 <div>
                   <div style={{ background: "rgba(0,0,0,0.3)", padding: "10px 16px", fontSize: 12, fontWeight: 700, color: "#9ca3af" }}>BATTING</div>
-                  {sc2.batting.map((b, i) => (
-                    <PlayerRow key={i} name={b.batsman.name} role={b["dismissal-text"] || "not out"} bat={b.r} sr={b.sr} color={def2} />
+                  {sc2.batting?.map((b, i) => (
+                    <PlayerRow key={i} name={b.batsman?.name || "Unknown"} role={b["dismissal-text"] || "not out"} bat={b.r} sr={b.sr} color={def2} />
                   ))}
                   <div style={{ background: "rgba(0,0,0,0.3)", padding: "10px 16px", fontSize: 12, fontWeight: 700, color: "#9ca3af" }}>BOWLING</div>
-                  {sc2.bowling.map((b, i) => (
-                    <PlayerRow key={i} name={b.bowler.name} role={`Eco: ${b.eco}`} bat={b.r} wkt={b.w} color={def2} />
+                  {sc2.bowling?.map((b, i) => (
+                    <PlayerRow key={i} name={b.bowler?.name || "Unknown"} role={`Eco: ${b.eco}`} bat={b.r} wkt={b.w} color={def2} />
                   ))}
                 </div>
               ) : squad2.length > 0 ? squad2.map((p, i) => (

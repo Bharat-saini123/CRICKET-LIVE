@@ -131,7 +131,7 @@ export default function Home() {
             ))}
           </div>
         ) : tab === "standings" ? (
-          <StandingsTable seriesId={matches.find(m => m.series_id)?.series_id || ""} />
+          <StandingsTable seriesId={matches.find(m => m.name.toLowerCase().includes("indian premier league"))?.series_id || "87c62aac-bc3c-4738-ab93-19da0690488f"} />
         ) : tabMatches.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 20px", color: "#374151" }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>🏏</div>
